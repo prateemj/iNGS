@@ -1,0 +1,5 @@
+mat-toolbar { font-family: Calibri, sans-serif; font-size: 14px; display: flex; justify-content: space-between; line-height: normal; padding: 15px; max-height: 70px; }
+
+.logo-row .navbar-brand { font-weight: 700; font-size: 25px }
+.logo-row .subtitle { font-size: 18px; display: block }
+.user-details span { display: flex; justify-content: end; align-items: center }

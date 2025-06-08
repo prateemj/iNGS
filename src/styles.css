@@ -1,1 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
+body{ margin: 0; font-size: 14px !important; font-family: Calibri, "Helvetica Neue", "sans-serif", Roboto !important; }
+.container-fluid { height: calc(100vh - 64px); padding: 15px;}
+
+.btn-primary { min-width: 100px; max-width: 100px; border-radius: 0; border: 0; background: #3f51b5; box-shadow: 3px 3px 5px -1px #3f51b5; }
+.btn-primary:hover { background: #38479d;}
