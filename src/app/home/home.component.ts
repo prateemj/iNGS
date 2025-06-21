@@ -17,9 +17,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 export class HomeComponent {
   // Required Variables
   selectedTabIndex = 0
+  parsedText: string = '';
   fileName: string = '';
   url: string = '';
-  extractedOutput: string = '';
+  extractedOutputFromURL: string = '';
+  extractedOutputFromFile: string = '';
   durationInSeconds = 5;
   showLoader: boolean = false;
 
@@ -27,32 +29,78 @@ export class HomeComponent {
 
   constructor(private homeService: HomeService) { }
 
+
   // To be worked on -- WIP
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      this.fileName = input.files[0].name;
+      const file = input.files[0];
+      this.fileName = file.name;
+
+      if (file.type === 'application/x-subrip' || this.fileName.endsWith('.srt')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const fileContent = reader.result as string;
+          this.parsedText = this.parseFileContent(fileContent);
+        };
+        reader.readAsText(file);
+      }
+      else if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const fileContent = reader.result as string;
+          this.parsedText = this.parseFileContent(fileContent);
+        };
+        reader.readAsText(file);
+      }
+      else {
+        alert('Please upload a valid .srt or .txt subtitle file.');
+      }
     }
   }
 
+  parseFileContent(data: string) {
+    let subtitles = '';
+    const entries = data.trim().split('\n\n');
+    entries.forEach(entry => {
+      const lines = entry.split('\n');
+      subtitles = subtitles + lines.slice(2).join(' ')
+    });
+    console.log("subtitles", subtitles);
+    return subtitles;
+  }
+
   // Function to call API and pass video URL to fetch extracted notes
-  extractSubtitlesFromUrl() {
+  extractSubtitles() {
     this.showLoader = true;
-    this.homeService.extractSubtitlesFromURL(this.url).subscribe((res: any) => {
-      this.extractedOutput = res;
-      this.showLoader = false;
-      this.openSnackBar('Notes extracted successfully!', 150000, 'success-snackbar');
-    }, error => {
-      this.showLoader = false;
-      this.openSnackBar('Error fetching subtitles from URL!', 5000, 'error-snackbar');
-    })
+    if (this.selectedTabIndex == 0) {
+      this.homeService.extractSubtitlesFromURL(this.url).subscribe((res: any) => {
+        this.extractedOutputFromURL = res;
+        this.showLoader = false;
+        this.openSnackBar('Notes extracted successfully!', 3000, 'success-snackbar');
+      }, error => {
+        this.showLoader = false;
+        this.openSnackBar('Error fetching subtitles from URL!', 3000, 'error-snackbar');
+      })
+    }
+    else {
+      this.homeService.extractSubtitlesFromFile(this.parsedText).subscribe((res: any) => {
+        this.extractedOutputFromFile = res;
+        this.showLoader = false;
+        this.openSnackBar('Notes extracted successfully!', 3000, 'success-snackbar');
+      }, error => {
+        this.showLoader = false;
+        this.openSnackBar('Error fetching subtitles from URL!', 3000, 'error-snackbar');
+      })
+    }
   }
 
   // Download the extracted notes in txt or pdf formats
   async downloadResponse(fileformat) {
     let filename = `Extracted Notes.${fileformat}`;
+    let content = this.selectedTabIndex == 0 ? this.extractedOutputFromURL : this.extractedOutputFromFile
     if (fileformat == 'txt') {
-      const blob = new Blob([this.extractedOutput], { type: 'text/plain' });
+      const blob = new Blob([content], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
 
       const a = document.createElement('a');
@@ -67,7 +115,7 @@ export class HomeComponent {
         const html2pdf = (await import('html2pdf.js')).default;
 
         const container = document.createElement('pre');
-        container.innerHTML = this.extractedOutput;
+        container.innerHTML = content;
         container.style.padding = '20px';
         document.body.appendChild(container);
 

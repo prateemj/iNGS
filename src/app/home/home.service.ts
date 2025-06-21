@@ -14,4 +14,9 @@ export class HomeService {
     const payload = { "url": url };
     return this.http.post(Global.GET_SUBTITLE_FROM_URL, payload);
   }
+
+  extractSubtitlesFromFile(text): Observable<object> {
+    const payload = { "subtitle": text };
+    return this.http.post(Global.GET_SUBTITLE_FROM_FILE, payload);
+  }
 }
