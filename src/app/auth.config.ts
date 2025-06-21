@@ -1,10 +1,11 @@
 import { Configuration, LogLevel } from '@azure/msal-browser';
+import { environment } from '../environments/environment';
 
 export const msalConfig: Configuration = {
   auth: {
-    clientId: '6ef37588-c506-4766-94dc-3f6bdd81f09e',
-    authority: 'https://login.microsoftonline.com/881bcb6a-2699-432e-98b6-62baad963ca4',
-    redirectUri: 'http://localhost:4200',
+    clientId: environment.clientId,
+    authority: environment.authority,
+    redirectUri: environment.redirectURI
   },
   cache: {
     cacheLocation: 'localStorage',

@@ -1,0 +1,5 @@
+.btn-container { display: flex; align-items: center; justify-content: end; }
+.donwload { color: #585555; }
+.donwload:hover { color: #504d4d; }
+
+.output-container{ margin-top: 10px; max-height: calc(100vh - 250px); padding: 10px; border: 1px solid #b0b0b0; }
