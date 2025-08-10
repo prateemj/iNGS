@@ -3,6 +3,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { LoginService } from '../login/login.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -12,20 +13,31 @@ import { LoginService } from '../login/login.service';
 })
 export class HeaderComponent {
   loggedIn = false;
+  loggedInAsGuest = false;
   username: any = '';
 
-  constructor(private loginService: LoginService) {}
+  constructor(private loginService: LoginService, private router: Router) { }
 
   ngOnInit() {
     this.loginService.islogged$.subscribe(isLogged => {
       if (isLogged) {
-        console.log('Subscribe in headercomp:', isLogged);
         this.loggedIn = isLogged;
-        console.log("is logged in headercomp is", this.loggedIn)
-        this.username = localStorage.getItem('username');
-        console.log("is username in headercomp is", this.username)
-    }
-  });
-}
+      }
+    });
+    this.loginService.isloggedAsGuest$.subscribe(isLoggedAsGuest => {
+      if (isLoggedAsGuest) {
+        this.loggedInAsGuest = isLoggedAsGuest;
+      }
+    });
+
+    this.loginService.username$.subscribe(name => {
+      this.username = name;
+    });
+  }
+
+  logout() {
+    this.loginService.logout();
+    this.router.navigateByUrl('/');
+  }
 
 }

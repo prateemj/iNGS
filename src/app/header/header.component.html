@@ -3,8 +3,8 @@
         <a class="navbar-brand" href="#">INGS</a>
         <label class="subtitle">INTELLIGENT NOTES GENERATING SOLUTION</label>
     </div>
-    <div *ngIf="loggedIn" class="row user-details">
+    <div *ngIf="username.length" class="row user-details">
         <span> Username: {{username}}</span>
-        <span> Logout: <mat-icon role="button" class="ms-2">logout</mat-icon></span>
+        <span> Logout: <mat-icon role="button" class="ms-2" (click)="logout()">logout</mat-icon></span>
     </div>
 </mat-toolbar>

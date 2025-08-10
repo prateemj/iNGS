@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  loggedIn = false
+  loggedIn = false;
+  loggedInAsGuest = false;
   constructor(private loginService: LoginService, @Inject(PLATFORM_ID) private platformId: Object, private router: Router) { }
 
   ngOnInit() {
@@ -20,10 +21,16 @@ export class LoginComponent {
     await this.loginService.login();
     if (isPlatformBrowser(this.platformId)) {
       this.loggedIn = localStorage.getItem('loggedIn') == 'true' ? true : false;
-     if(this.loggedIn){
-      this.router.navigateByUrl('/home');
-     }
+      if (this.loggedIn) {
+        this.router.navigateByUrl('/home');
+      }
     }
   }
 
+  async loginAsGuest() {
+    this.loggedInAsGuest = true;
+    this.loginService.isloggedAsGuest.next(true);
+    localStorage.setItem("loggedInAsGuest", "true");
+    this.router.navigateByUrl('/home');
+  }
 }

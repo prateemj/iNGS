@@ -8,9 +8,10 @@ import { HomeService } from './home.service';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 @Component({
   selector: 'app-home',
-  imports: [MatFormFieldModule, MatIconModule, MatInputModule, MatTabsModule, CommonModule, FormsModule, MatProgressSpinnerModule],
+  imports: [MatFormFieldModule, MatIconModule, MatInputModule, MatTabsModule, CommonModule, FormsModule, MatProgressSpinnerModule, MatTooltipModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -61,10 +62,15 @@ export class HomeComponent {
 
   parseFileContent(data: string) {
     let subtitles = '';
+    // console.log("Data", data)
     const entries = data.trim().split('\n\n');
     entries.forEach(entry => {
       const lines = entry.split('\n');
-      subtitles = subtitles + lines.slice(2).join(' ')
+      // console.log("Lines", lines)
+      // console.log("Lines", lines.slice(2))
+      // console.log("Lines", lines.join(' '))
+      // subtitles = subtitles + lines.slice(2).join(' ')
+      subtitles = subtitles + lines.join(' ')
     });
     console.log("subtitles", subtitles);
     return subtitles;
@@ -90,7 +96,7 @@ export class HomeComponent {
         this.openSnackBar('Notes extracted successfully!', 3000, 'success-snackbar');
       }, error => {
         this.showLoader = false;
-        this.openSnackBar('Error fetching subtitles from URL!', 3000, 'error-snackbar');
+        this.openSnackBar('Error fetching subtitles from transcript file!', 3000, 'error-snackbar');
       })
     }
   }

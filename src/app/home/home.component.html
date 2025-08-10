@@ -50,7 +50,7 @@
                         (click)="fileInput.click()" />
                     <input type="file" #fileInput hidden (change)="onFileSelected($event)" accept=".srt,.txt" />
                 </mat-form-field>
-                <mat-icon role="button" title="submit" class="btn-icon" [ngClass]="{'btn-icon-disabled' : url.length == 0}"
+                <mat-icon role="button" title="submit" class="btn-icon" [ngClass]="{'btn-icon-disabled' : parsedText.length == 0}"
                     (click)="extractSubtitles()">send</mat-icon>
                 <small class="d-block"><b>Note: </b>Only .txt/.srt files are accepted</small>
             </div>

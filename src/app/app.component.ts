@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
 import { LoginService } from './login/login.service';
 
@@ -11,25 +11,22 @@ import { LoginService } from './login/login.service';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  loggedIn = false;
   username: any = '';
+  currentRoute = '';
 
-  constructor(private loginService: LoginService) {
+  constructor(private loginService: LoginService, private router : Router) {
   }
 
   ngOnInit() {
-    this.loginService.islogged$.subscribe(isLogged => {
-      if (isLogged) {
-        console.log('Subscribe in appcomponent:', isLogged);
-        this.loggedIn = isLogged;
-        console.log("is logged in app comp is", this.loggedIn)
-      }
-    });
     this.initMSAL();
   }
 
   async initMSAL() {
     this.loginService.initMSAL();
+  }
+
+  showBgImg() {
+    return this.router.url == '/login';
   }
 
 }
